@@ -13,9 +13,12 @@ class MainVC: UIViewController {
     let totalDebtLabel = UILabel()
     let debtsTableView = UITableView()
     
+    var totalDebt = 9999
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = .systemBackground
         setupNavBar()
         setupTableView()
         setupTotalDebtView()
@@ -26,7 +29,8 @@ class MainVC: UIViewController {
     
     func setupNavBar(){
         navigationItem.title = "Main"
-        navigationController?.navigationBar.barTintColor = .systemBackground
+        navigationController?.navigationBar.barTintColor = view.backgroundColor
+        navigationController?.navigationBar.backgroundColor = view.backgroundColor
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Profile", style: .plain, target: self, action: #selector(leftBarButtonTapped))
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(rightBarButtonTapped))
@@ -45,7 +49,7 @@ class MainVC: UIViewController {
             debtsTableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             debtsTableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             debtsTableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-            debtsTableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -40)
+            debtsTableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -50)
             ])
     }
     
@@ -55,9 +59,18 @@ class MainVC: UIViewController {
         totalDebtView.translatesAutoresizingMaskIntoConstraints = false
         totalDebtLabel.translatesAutoresizingMaskIntoConstraints = false
         
+        //CurrencyFormatter maybe place in Debt model
+        let currencyFormatter = NumberFormatter()
+        currencyFormatter.usesGroupingSeparator = true
+        currencyFormatter.numberStyle = .currency
+        // localize to your grouping and decimal separator
+        currencyFormatter.locale = Locale.current
+        let currencyString = currencyFormatter.string(from: NSNumber(value: totalDebt))!
         
-        totalDebtView.backgroundColor = .secondarySystemBackground
-        totalDebtLabel.text = "Total Debt: "
+        
+        totalDebtView.backgroundColor = view.backgroundColor
+        totalDebtLabel.text = "Total Debt: \(currencyString)" // Uses CurrencyFormatter
+        totalDebtLabel.textColor = .systemRed
         
         NSLayoutConstraint.activate([
             totalDebtView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
@@ -101,7 +114,7 @@ class MainVC: UIViewController {
 // TableView
 extension MainVC: UITableViewDataSource{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 100
+        return 50
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
