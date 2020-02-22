@@ -22,12 +22,17 @@ class ProfileVC: UIViewController {
     func setupNavBar(){
         navigationItem.title = "Profile"
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Edit", style: .plain, target: self, action: #selector(editButtonTapped))
-        navigationItem.rightBarButtonItem?.tintColor = .systemGreen
+        
+        
     }
     
     @objc func editButtonTapped(){
         print("Left bar button tapped")
     }
+    
+//    override func willMove(toParentViewController parent: UIViewController?) {
+//          self.navigationController?.navigationBar.barTintColor = color use in secondVC
+//    }
     
 
  
