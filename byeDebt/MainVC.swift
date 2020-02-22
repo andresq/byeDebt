@@ -13,7 +13,22 @@ class MainVC: UIViewController {
     let totalDebtLabel = UILabel()
     let debtsTableView = UITableView()
     
-    var totalDebt = 9999
+    // Hardcoded Temp values
+    var totalDebt = 9999.00
+    var debts: [Debt] = [
+        Debt(name: "Amex Sapphire", balance: 1231.12, minPayment: 25, rate: 3.21),
+        Debt(name: "Chase Red", balance: 141.24, minPayment: 25, rate: 1.21),
+        Debt(name: "Chase Gold", balance: 1414.35, minPayment: 25, rate: 14.21),
+        Debt(name: "Apple Sapphire", balance: 657.33, minPayment: 25, rate: 21.21),
+        Debt(name: "Apple Red", balance: 245.67, minPayment: 25, rate: 23.21),
+        Debt(name: "Apple Gold", balance: 101.34, minPayment: 25, rate: 21.21),
+        Debt(name: "Amex Platinum", balance: 1231.12, minPayment: 25, rate: 3.21),
+        Debt(name: "Chase Black", balance: 141.24, minPayment: 25, rate: 1.21),
+        Debt(name: "Chase Green", balance: 1414.35, minPayment: 25, rate: 14.21),
+        Debt(name: "Apple Platinum", balance: 657.33, minPayment: 25, rate: 21.21),
+        Debt(name: "Apple Blue", balance: 245.67, minPayment: 25, rate: 23.21),
+        Debt(name: "Apple Tin", balance: 101.34, minPayment: 25, rate: 21.21)
+    ].sorted(by: <)
     
 
     override func viewDidLoad() {
@@ -23,26 +38,26 @@ class MainVC: UIViewController {
         setupTableView()
         setupTotalDebtView()
         
+        
     }
     
     // MARK: View Setups
     
     func setupNavBar(){
         navigationItem.title = "Main"
-        navigationController?.navigationBar.barTintColor = view.backgroundColor
-        navigationController?.navigationBar.backgroundColor = view.backgroundColor
+//        navigationController?.navigationBar.barTintColor = view.backgroundColor
+//        navigationController?.navigationBar.backgroundColor = view.backgroundColor
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Profile", style: .plain, target: self, action: #selector(leftBarButtonTapped))
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(rightBarButtonTapped))
-        
-        navigationItem.leftBarButtonItem?.tintColor = .systemGreen
-        navigationItem.rightBarButtonItem?.tintColor = .systemGreen
+
     }
     
     func setupTableView(){
         view.addSubview(debtsTableView)
         debtsTableView.dataSource = self // Where to look for protocol functions
-        debtsTableView.register(UITableViewCell.self, forCellReuseIdentifier: "debtCell")
+        debtsTableView.register(DebtCell.self, forCellReuseIdentifier: "DebtCell")
+        debtsTableView.rowHeight = 100 // Is there a way to put this in DebtCell?
         debtsTableView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
@@ -59,13 +74,8 @@ class MainVC: UIViewController {
         totalDebtView.translatesAutoresizingMaskIntoConstraints = false
         totalDebtLabel.translatesAutoresizingMaskIntoConstraints = false
         
-        //CurrencyFormatter maybe place in Debt model
-        let currencyFormatter = NumberFormatter()
-        currencyFormatter.usesGroupingSeparator = true
-        currencyFormatter.numberStyle = .currency
-        // localize to your grouping and decimal separator
-        currencyFormatter.locale = Locale.current
-        let currencyString = currencyFormatter.string(from: NSNumber(value: totalDebt))!
+        
+        let currencyString = Debt.getStringCurrency(of: totalDebt)
         
         
         totalDebtView.backgroundColor = view.backgroundColor
@@ -114,12 +124,30 @@ class MainVC: UIViewController {
 // TableView
 extension MainVC: UITableViewDataSource{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 50
+        return debts.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "debtCell", for: indexPath)
-        cell.textLabel?.text = "\(indexPath.row + 1)!"
+        let cell = tableView.dequeueReusableCell(withIdentifier: "DebtCell", for: indexPath) as! DebtCell
+        
+        //Temp cell info from hardcoded debt array
+        let debt = debts[indexPath.row]
+        
+        let balanceString = Debt.getStringCurrency(of: debt.balance)
+        var nextPayment = debt.balance * debt.dailyRate
+        // Payments min is usually atleast 25
+        if nextPayment < 25 {nextPayment = 25}
+        
+        let paymentString = Debt.getStringCurrency(of: nextPayment)
+        let rateString = NSString(format: "%.2f", debt.rate) as String
+        
+        cell.debtNameLabel.attributedText = NSAttributedString(string: debt.name, attributes: [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 20)])
+        cell.debtBalanceLabel.text = "Balance: \(balanceString)"
+        cell.debtNextPaymentLabel.text = "Next Payment: \(paymentString)"
+        cell.rateLabel.text = "Rate: \(rateString)%"
+        
+        // End of temp info
+        
         return cell
     }
     
