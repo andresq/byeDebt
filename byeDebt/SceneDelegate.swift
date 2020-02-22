@@ -20,18 +20,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window?.windowScene = windowScene
         window?.rootViewController = UINavigationController(rootViewController: MainVC())
         window?.makeKeyAndVisible()
-        
-        // App-wide navigationController
-        configureNavigationBar()
-        
     }
     
-    // MARK: My Functions
-    func configureNavigationBar() {
-        UINavigationBar.appearance().tintColor = .systemGreen
-        
-    }
-    
+
     
 
     func sceneDidDisconnect(_ scene: UIScene) {
