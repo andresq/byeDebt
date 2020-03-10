@@ -11,6 +11,9 @@ import UIKit
 class AddDebtVC: UIViewController {
     let debtNameLabel = UILabel()
     let debtNameTextField = UITextField()
+    
+    let debtBalanceLabel = UILabel()
+    let debtBalanceTextField = UITextField()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -20,6 +23,8 @@ class AddDebtVC: UIViewController {
         
         setupDebtNameLabel()
         setupDebtTextField()
+        
+        setupDebtBalanceLabel()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -63,6 +68,23 @@ class AddDebtVC: UIViewController {
             debtNameTextField.heightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.heightAnchor, multiplier: 0.10)
         ])
         
+    }
+    
+    func setupDebtBalanceLabel() {
+        view.addSubview(debtBalanceLabel)
+        
+        debtBalanceLabel.text = "Debt balance"
+        debtBalanceLabel.backgroundColor = .systemTeal
+        
+        debtBalanceLabel.translatesAutoresizingMaskIntoConstraints = false
+        // Top is attached to DebtTextField.bottomAnchor
+        NSLayoutConstraint.activate([
+            debtBalanceLabel.topAnchor.constraint(equalTo: debtNameTextField.bottomAnchor, constant: 20),
+            debtBalanceLabel.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 50),
+            debtBalanceLabel.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -50),
+            debtBalanceLabel.heightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.heightAnchor, multiplier: 0.05)
+            
+        ])
     }
     
     
