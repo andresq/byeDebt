@@ -51,7 +51,7 @@ class AddDebtVC: UIViewController {
     func setupDebtTextField(){
         view.addSubview(debtNameTextField)
         
-        debtNameTextField.placeholder = "DEBT NAME TEXTFIELD"
+        debtNameTextField.placeholder = "Please enter debt name"
         debtNameTextField.backgroundColor = .systemPink
         
         debtNameTextField.translatesAutoresizingMaskIntoConstraints = false
