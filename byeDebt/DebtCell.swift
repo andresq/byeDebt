@@ -44,7 +44,7 @@ class DebtCell: UITableViewCell {
         }
         
         
-        // ToDo: use NSLayoutConstraints.constraints[]
+        // FIXME: use NSLayoutConstraints.constraints[]
         debtNameLabel.topAnchor.constraint(equalTo: topAnchor, constant: 5).isActive = true
         debtNameLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 15).isActive = true
         debtNameLabel.heightAnchor.constraint(equalToConstant: 20).isActive = true // Note: Row Height is set to 50
