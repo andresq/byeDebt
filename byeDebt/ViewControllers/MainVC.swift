@@ -16,11 +16,11 @@ class MainVC: UIViewController {
     // Hardcoded Temp values
     var totalDebt = 9999.00
     var debts: [Debt] = [
+        Debt(name: "Apple Red", balance: 245.67, minPayment: 25, rate: 26.21),
         Debt(name: "Amex Sapphire", balance: 1331.12, minPayment: 25, rate: 3.21),
         Debt(name: "Chase Red", balance: 141.24, minPayment: 25, rate: 1.21),
         Debt(name: "Chase Gold", balance: 1414.35, minPayment: 25, rate: 14.21),
         Debt(name: "Apple Sapphire", balance: 657.33, minPayment: 25, rate: 21.21),
-        Debt(name: "Apple Red", balance: 245.67, minPayment: 25, rate: 23.21),
         Debt(name: "Apple Gold", balance: 101.34, minPayment: 25, rate: 21.21),
         Debt(name: "Amex Platinum", balance: 1231.12, minPayment: 25, rate: 3.21),
         Debt(name: "Chase Black", balance: 11.24, minPayment: 25, rate: 1.21),
@@ -28,14 +28,13 @@ class MainVC: UIViewController {
         Debt(name: "Apple Platinum", balance: 657.33, minPayment: 25, rate: 21.21),
         Debt(name: "Apple Blue", balance: 245.67, minPayment: 25, rate: 23.21),
         Debt(name: "Apple Tin", balance: 101.34, minPayment: 25, rate: 21.21)
-    ].sorted(by: <)
+    ].sorted(by: >)
     
     
 
     var totalBalance = 0.0 {
         didSet{
             totalDebtLabel.text = "Total Debt: \(Debt.getStringCurrency(of: totalBalance))"
-            
         }
     }
 
@@ -63,14 +62,8 @@ class MainVC: UIViewController {
     
     func setupNavBar(){
         navigationItem.title = "Main"
-//        navigationController?.navigationBar.barTintColor = view.backgroundColor
-//        navigationController?.navigationBar.backgroundColor = view.backgroundColor
         navigationController?.navigationBar.prefersLargeTitles = true
-//        navigationItem.largeTitleDisplayMode = .always
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Profile", style: .plain, target: self, action: #selector(leftBarButtonTapped))
-        
-        
-//        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(rightBarButtonTapped))
         
         let addDebtButton = UIImage(systemName: "plus.square")
         

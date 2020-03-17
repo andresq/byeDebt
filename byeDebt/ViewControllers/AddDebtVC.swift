@@ -182,7 +182,7 @@ class AddDebtVC: UIViewController {
         // TODO: pop back to the MainVC
         
         
-        let debtName = debtNameTextField.text ?? "no name"
+        let debtName = Debt.checkNameString(of: debtNameTextField.text)
         let debtBalance = debtBalanceTextField.text ?? "00.00"
         let debtRate = debtRateTextField.text ?? "0.0"
         

@@ -43,6 +43,8 @@ class Debt: Comparable {
         return dailyRate * balance * 30
     }
     
+    
+    // MARK: Static Functions
     // Double to proper currenct String
     // eg 10.0 returns $10.00
     static func getStringCurrency(of doubleValue: Double) -> String {
@@ -52,19 +54,53 @@ class Debt: Comparable {
         currencyFormatter.locale = Locale.current
         return  currencyFormatter.string(from: NSNumber(value: doubleValue))!
     }
-    
     static func stringToDouble(_ string: String) -> Double? {
         let input = string
         let doubleValue = Double(input)
         return doubleValue
     }
     
-    // Comparable wrt to rate
+    // Check if Name is max length 27 or empty
+    static func checkNameString(of string: String?) -> String {
+        if let string = string {
+            if (string.count == 0) {
+                return "Credit Card"
+            } else if(string.count <= 27){
+                return string
+            } else {
+                let startingIndex = string.index(string.startIndex, offsetBy: 0)
+                let endIndex = string.index(string.startIndex, offsetBy: 26)
+                let newString = String(string[startingIndex...endIndex])
+                return newString
+            }
+        } else{
+            return "Credit Card"
+        }
+    }
+    
+    // Check if string contains other than decimalPad inputs
+    // Return a float
+//    static func checkBalanceString(of string: String?) -> Float {
+//        if let string = string {
+//            if(string.contains(StringProtocol())
+//
+//
+//
+//
+//
+//        } else {
+//            return 00.00
+//        }
+//    }
+//    static func check rateString()
+    
+    // MARK: Comparable Protocols
+    //       wrt to rate
     static func < (lhs: Debt, rhs: Debt) -> Bool {
-        return lhs.rate > rhs.rate //Highest rate in first position
+        return lhs.rate < rhs.rate //Highest rate in first position
     }
     
     static func == (lhs: Debt, rhs: Debt) -> Bool {
-        return lhs.name < rhs.name
+        return lhs.name == rhs.name
     }
 }
