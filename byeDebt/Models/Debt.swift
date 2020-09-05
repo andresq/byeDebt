@@ -16,22 +16,25 @@ class Debt: Comparable {
     var minPayment: Double
     var rate: Double
     var dailyRate: Double
+    var dueDay: Int
     
-    required init(name: String, balance: Double, minPayment: Double, rate: Double) {
+    required init(name: String, balance: Double, minPayment: Double, rate: Double, dueDay: Int) {
         self.name = name
         self.balance = balance
         self.minPayment = minPayment
         self.rate = rate
         self.dailyRate = rate/365
+        self.dueDay = dueDay
     }
     
-    required init() {
-        self.name = ""
-        self.balance = 0.0
-        self.minPayment = 0.0
-        self.rate = 0.0
-        self.dailyRate = rate/365
-    }
+//    required init() {
+//        self.name = ""
+//        self.balance = 0.0
+//        self.minPayment = 0.0
+//        self.rate = 0.0
+//        self.dailyRate = rate/365
+//        self.dueDate = date
+//    }
     
     func calculateDailyRate(rate: Double) -> Double {
         // Change rate calculation
@@ -41,6 +44,40 @@ class Debt: Comparable {
     func calculateInterestCharge(rate: Double) -> Double {
         // Change rate calculation
         return dailyRate * balance * 30
+    }
+    
+    func calculateNextDueDate() -> Date? {
+        let today = Date()
+        let calender = Calendar.current
+        
+        let todayDay = calender.component(.day, from: today)
+        
+        let month: Int
+        let day: Int
+        let year: Int
+        
+        if (todayDay <= dueDay){
+            month = calender.component(.month, from: today)
+            day = dueDay
+            year = calender.component(.year, from: today)
+        } else {
+            guard let nextMonth = Calendar.current.date(byAdding: .month, value: 1, to: today) else { return nil }
+            month = calender.component(.month, from: nextMonth)
+            day = dueDay
+            year = calender.component(.year, from: nextMonth)
+        }
+        
+        var dateComponents = DateComponents()
+        dateComponents.month = month
+        dateComponents.day = day
+        dateComponents.year = year
+        dateComponents.hour = 23
+        dateComponents.minute = 59
+        
+        let dueDate = calender.date(from: dateComponents)
+        
+        return dueDate
+        
     }
     
     
@@ -54,9 +91,9 @@ class Debt: Comparable {
         currencyFormatter.locale = Locale.current
         return  currencyFormatter.string(from: NSNumber(value: doubleValue))!
     }
-    static func stringToDouble(_ string: String) -> Double? {
+    static func stringToDouble(_ string: String) -> Double {
         let input = string
-        let doubleValue = Double(input)
+        let doubleValue = Double(input) ?? 0.0
         return doubleValue
     }
     

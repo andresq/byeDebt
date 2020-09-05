@@ -16,18 +16,18 @@ class MainVC: UIViewController {
     // Hardcoded Temp values
     var totalDebt = 9999.00
     var debts: [Debt] = [
-        Debt(name: "Apple Red", balance: 245.67, minPayment: 25, rate: 26.21),
-        Debt(name: "Amex Sapphire", balance: 1331.12, minPayment: 25, rate: 3.21),
-        Debt(name: "Chase Red", balance: 141.24, minPayment: 25, rate: 1.21),
-        Debt(name: "Chase Gold", balance: 1414.35, minPayment: 25, rate: 14.21),
-        Debt(name: "Apple Sapphire", balance: 657.33, minPayment: 25, rate: 21.21),
-        Debt(name: "Apple Gold", balance: 101.34, minPayment: 25, rate: 21.21),
-        Debt(name: "Amex Platinum", balance: 1231.12, minPayment: 25, rate: 3.21),
-        Debt(name: "Chase Black", balance: 11.24, minPayment: 25, rate: 1.21),
-        Debt(name: "Chase Green", balance: 1414.35, minPayment: 25, rate: 14.21),
-        Debt(name: "Apple Platinum", balance: 657.33, minPayment: 25, rate: 21.21),
-        Debt(name: "Apple Blue", balance: 245.67, minPayment: 25, rate: 23.21),
-        Debt(name: "Apple Tin", balance: 101.34, minPayment: 25, rate: 21.21)
+        Debt(name: "Apple Red", balance: 245.67, minPayment: 25, rate: 26.21, dueDay: 10),
+        Debt(name: "Amex Sapphire", balance: 1331.12, minPayment: 25, rate: 3.21, dueDay: 10),
+        Debt(name: "Chase Red", balance: 141.24, minPayment: 25, rate: 1.21, dueDay: 10),
+        Debt(name: "Chase Gold", balance: 1414.35, minPayment: 25, rate: 14.21, dueDay: 10),
+        Debt(name: "Apple Sapphire", balance: 657.33, minPayment: 25, rate: 21.21, dueDay: 10),
+        Debt(name: "Apple Gold", balance: 101.34, minPayment: 25, rate: 21.21, dueDay: 10),
+        Debt(name: "Amex Platinum", balance: 1231.12, minPayment: 25, rate: 3.21, dueDay: 10),
+        Debt(name: "Chase Black", balance: 11.24, minPayment: 25, rate: 1.21, dueDay: 10),
+        Debt(name: "Chase Green", balance: 1414.35, minPayment: 25, rate: 14.21, dueDay: 10),
+        Debt(name: "Apple Platinum", balance: 657.33, minPayment: 25, rate: 21.21, dueDay: 10),
+        Debt(name: "Apple Blue", balance: 245.67, minPayment: 25, rate: 23.21, dueDay: 10),
+        Debt(name: "Apple Tin", balance: 101.34, minPayment: 25, rate: 21.21, dueDay: 10)
     ].sorted(by: >)
     
     
@@ -65,7 +65,8 @@ class MainVC: UIViewController {
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Profile", style: .plain, target: self, action: #selector(leftBarButtonTapped))
         
-        let addDebtButton = UIImage(systemName: "plus.square")
+        let addDebtButton = UIImage(systemName: "plus.circle.fill")
+        
         
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: addDebtButton, style: .plain, target: self, action: #selector(rightBarButtonTapped))
 
@@ -73,8 +74,9 @@ class MainVC: UIViewController {
     
     func setupTableView(){
         view.addSubview(debtsTableView)
-        debtsTableView.dataSource = self // Where to look for protocol functions
-        debtsTableView.register(DebtCell.self, forCellReuseIdentifier: "DebtCell")
+        debtsTableView.delegate = self // Where to look for protocol functions
+        debtsTableView.dataSource = self
+        debtsTableView.register(DebtCell.self, forCellReuseIdentifier: DebtCell.reuseID)
         debtsTableView.rowHeight = 100 // Is there a way to put this in DebtCell?
         debtsTableView.translatesAutoresizingMaskIntoConstraints = false
         
@@ -142,7 +144,7 @@ class MainVC: UIViewController {
 }
 
 // TableView
-extension MainVC: UITableViewDataSource{
+extension MainVC: UITableViewDelegate, UITableViewDataSource{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return debts.count
     }
@@ -155,7 +157,7 @@ extension MainVC: UITableViewDataSource{
         
         let balanceString = Debt.getStringCurrency(of: debt.balance)
         var nextPayment = debt.balance * debt.dailyRate
-        // Payments min is usually atleast 25
+        // Payments min is  atleast 25
         if nextPayment < 25 {nextPayment = 25}
         
         let paymentString = Debt.getStringCurrency(of: nextPayment)
@@ -166,7 +168,15 @@ extension MainVC: UITableViewDataSource{
         cell.debtNextPaymentLabel.text = "Next Payment: \(paymentString)"
         cell.rateLabel.text = "Rate: \(rateString)%"
         
-        // End of temp info
+        let dueDate = debt.calculateNextDueDate()
+        let formatter = DateFormatter()
+        formatter.dateFormat = "MMM d"
+        
+        if let dueDate = dueDate {
+            cell.dueDateLabel.text = "Due: \(formatter.string(from: dueDate))"
+        }
+        
+        
         
         return cell
     }
